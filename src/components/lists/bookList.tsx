@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -33,7 +34,21 @@ export const BookList = ({ booksCollectionRef, update }: props) => {
     getBookList();
   }, [update]);
 
-  const deleteBook = async (id: any) => {
+  const updateBookTitle = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const book = Object.fromEntries(formData.entries());
+
+    const bookDoc = doc(db, "books", book.id);
+    try {
+      await updateDoc(bookDoc, { title: book.newTitle });
+      getBookList();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteBook = async (id: string) => {
     const bookDoc = doc(db, "books", id);
     try {
       await deleteDoc(bookDoc);
@@ -47,13 +62,22 @@ export const BookList = ({ booksCollectionRef, update }: props) => {
     <div>
       {bookList.map((book: any) => (
         <div key={`book-${book.id}`}>
-          <h1>{book.title ?? book.bookTitle}</h1>
+          <h1>{book.title || "untitled"}</h1>
           <p>Author: {book.author}</p>
           <p>Year: {book.year}</p>
           <p>Read: {book.read?.toString()}</p>
-          <p>
-            <button onClick={() => deleteBook(book.id)}>Delete</button>
-          </p>
+          <button onClick={() => deleteBook(book.id)}>Delete book</button>
+          <form onSubmit={updateBookTitle}>
+            <input
+              type="text"
+              name="id"
+              hidden={true}
+              value={book.id}
+              readOnly={true}
+            />
+            <input type="text" name="newTitle" placeholder="new title..." />
+            <button type="submit">Update title</button>
+          </form>
         </div>
       ))}
     </div>
