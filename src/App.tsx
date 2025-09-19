@@ -1,14 +1,14 @@
 import "./App.css";
 
 import { collection } from "firebase/firestore";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Auth } from "./components/auth";
 import { FormCreateNewBook } from "./components/forms/formCreateNewBook";
 import { BookList } from "./components/lists/bookList";
 import { db } from "./config/firebase";
 
-function App() {
+function App () {
   const [updateBookList, setUpdateBookList] = useState(1);
   const booksCollectionRef = useMemo(() => collection(db, "books"), []);
 
