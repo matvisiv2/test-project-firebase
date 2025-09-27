@@ -1,6 +1,8 @@
 import { addDoc, CollectionReference } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
 
+import { auth } from "../../config/firebase";
+
 interface props {
   booksCollectionRef: CollectionReference;
   setUpdateBookList: Dispatch<SetStateAction<number>>;
@@ -16,7 +18,14 @@ export const FormCreateNewBook = ({
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await addDoc(booksCollectionRef, { ...data, read: data.read ?? false });
+      // TODO: delete next line
+      console.log(auth?.currentUser?.uid);
+
+      await addDoc(booksCollectionRef, {
+        ...data,
+        read: data.read ?? false,
+        userId: auth?.currentUser?.uid,
+      });
       setUpdateBookList(Math.random());
     } catch (err) {
       console.log(err);

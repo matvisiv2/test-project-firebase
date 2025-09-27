@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import { db } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 
 interface props {
   booksCollectionRef: CollectionReference;
@@ -41,6 +41,9 @@ export const BookList = ({ booksCollectionRef, update }: props) => {
 
     const bookDoc = doc(db, "books", `${book.id}`);
     try {
+      // TODO: delete next line
+      console.log(auth?.currentUser?.uid);
+
       await updateDoc(bookDoc, { title: book.newTitle });
       getBookList();
     } catch (err) {
@@ -62,12 +65,14 @@ export const BookList = ({ booksCollectionRef, update }: props) => {
     <div>
       {bookList.map((book: any) => (
         <div key={`book-${book.id}`}>
-          <h1>{book.title || "untitled"}</h1>
+          <h1 style={{ color: book.read ? "green" : "#d12800" }}>
+            {book.title || "untitled"}
+          </h1>
           <p>Author: {book.author}</p>
           <p>Year: {book.year}</p>
           <p>Read: {book.read?.toString()}</p>
           <button onClick={() => deleteBook(book.id)}>Delete book</button>
-          <form onSubmit={updateBookTitle}>
+          <form onSubmit={updateBookTitle} style={{ display: "inline" }}>
             <input
               type="text"
               name="id"
