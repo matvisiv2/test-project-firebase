@@ -24,7 +24,7 @@ export const FormCreateNewBook = ({
       await addDoc(booksCollectionRef, {
         ...data,
         read: data.read ?? false,
-        userId: auth?.currentUser?.uid,
+        userId: auth?.currentUser?.uid ?? null,
       });
       setUpdateBookList(Math.random());
     } catch (err) {
