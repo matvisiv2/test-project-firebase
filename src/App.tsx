@@ -8,7 +8,7 @@ import { FormCreateNewBook } from "./components/forms/formCreateNewBook";
 import { BookList } from "./components/lists/bookList";
 import { db } from "./config/firebase";
 
-function App () {
+function App() {
   const [updateBookList, setUpdateBookList] = useState(1);
   const booksCollectionRef = useMemo(() => collection(db, "books"), []);
 

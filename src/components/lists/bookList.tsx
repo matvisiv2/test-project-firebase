@@ -39,7 +39,7 @@ export const BookList = ({ booksCollectionRef, update }: props) => {
     const formData = new FormData(e.target);
     const book = Object.fromEntries(formData.entries());
 
-    const bookDoc = doc(db, "books", book.id);
+    const bookDoc = doc(db, "books", `${book.id}`);
     try {
       await updateDoc(bookDoc, { title: book.newTitle });
       getBookList();
